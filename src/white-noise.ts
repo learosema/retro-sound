@@ -45,21 +45,21 @@ export class WhiteNoise {
 	setFilterFreqAtTime(frequency: number, time = 0) {
 		this.time = Math.max(time, this.time);
 		const absTime = this.audioContext.currentTime + time;
-		this.filter?.frequency.setValueAtTime(frequency, time);
+		this.filter?.frequency.setValueAtTime(frequency, absTime);
 		return this;
 	}
 
 	rampFilterFreqAtTime(frequency: number, time = 0) {
 		this.time = Math.max(time, this.time);
 		const absTime = this.audioContext.currentTime + time;
-		this.filter?.frequency.linearRampToValueAtTime(frequency, time);
+		this.filter?.frequency.linearRampToValueAtTime(frequency, absTime);
 		return this;
 	}
 
 	expRampFilterFreqAtTime(frequency: number, time = 0) {
 		this.time = Math.max(time, this.time);
 		const absTime = this.audioContext.currentTime + time;
-		this.filter?.frequency.exponentialRampToValueAtTime(frequency, time);
+		this.filter?.frequency.exponentialRampToValueAtTime(frequency, absTime);
 		return this;
 	}
 
