@@ -10,9 +10,9 @@ insert_final_newline = true
 
 # Matches multiple files with brace expansion notation
 # Set default charset
-[*.{js,ts,json,yaml}]
+[*.{js,ts,json,yaml,njk}]
 charset = utf-8
 trim_trailing_whitespace = true
-indent_style = space
+indent_style = tab
 indent_size = 2
 quote_type = single

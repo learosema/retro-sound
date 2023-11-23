@@ -4,7 +4,7 @@
  * @returns frequency
  */
 export function noteToFrequency(note: string): number {
-  return 440 * Math.pow(2, (noteToMIDI(note) - 69) / 12);
+	return 440 * Math.pow(2, (noteToMIDI(note) - 69) / 12);
 }
 
 /**
@@ -13,8 +13,8 @@ export function noteToFrequency(note: string): number {
  * @returns
  */
 export function noteToMIDI(note: string): number {
-  const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-  const octave = parseInt(note.slice(-1));
-  const noteName = note.slice(0, -1);
-  return (octave + 1) * 12 + noteNames.indexOf(noteName);
+	const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+	const octave = parseInt(note.slice(-1));
+	const noteName = note.slice(0, -1);
+	return (octave + 1) * 12 + noteNames.indexOf(noteName);
 }
