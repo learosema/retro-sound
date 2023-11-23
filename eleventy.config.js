@@ -12,7 +12,7 @@ module.exports = (eleventyConfig) => {
 
   // social icons to root directory
   eleventyConfig.addPassthroughCopy({
-    'src/assets/images/favicon/*': '/',
+    'src/assets/*.png': '/',
   });
 
   // Tell 11ty to use the .eleventyignore and ignore our .gitignore file
