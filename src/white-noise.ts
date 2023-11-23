@@ -9,7 +9,7 @@ export class WhiteNoise {
 	output: AudioNode;
 	destination: AudioNode | null = null;
 	filter: BiquadFilterNode | null = null;
-	lastTime = 0;
+	time = 0;
 
 	static bufferSize: number = 0;
 	static noiseBuffer: AudioBuffer | null = null;
@@ -19,10 +19,14 @@ export class WhiteNoise {
 		this.bufferSource = audioContext.createBufferSource();
 		this.bufferSource.buffer = WhiteNoise.noiseBuffer;
 		this.bufferSource.loop = true;
-		this.bufferSource.start();
 		this.gain = audioContext.createGain();
 		this.bufferSource.connect(this.gain);
 		this.output = this.gain;
+	}
+
+	play() {
+		this.bufferSource.start();
+		return this;
 	}
 
 	toDestination(destination: AudioNode | null = null) {
@@ -33,24 +37,44 @@ export class WhiteNoise {
 
 	withFilter(type: BiquadFilterType, frequency: number, Q?: number) {
 		this.filter = createFilter(this.audioContext, type, frequency, Q);
+		this.bufferSource.disconnect();
 		this.bufferSource.connect(this.filter);
 		this.filter.connect(this.output);
-		this.gain.connect(this.filter);
-		this.output = this.filter;
 		return this;
 	}
 
 	rampFilterFreqAtTime(frequency: number, time = 0) {
-		this.lastTime = Math.max(time, this.lastTime);
+		this.time = Math.max(time, this.time);
 		const absTime = this.audioContext.currentTime + time;
 		this.filter?.frequency.linearRampToValueAtTime(frequency, time);
 		return this;
 	}
 
 	expRampFilterFreqAtTime(frequency: number, time = 0) {
-		this.lastTime = Math.max(time, this.lastTime);
+		this.time = Math.max(time, this.time);
 		const absTime = this.audioContext.currentTime + time;
 		this.filter?.frequency.exponentialRampToValueAtTime(frequency, time);
+		return this;
+	}
+
+	rampToVolumeAtTime(volume: number, time: number) {
+		const absTime = this.audioContext.currentTime + time;
+		this.gain.gain.linearRampToValueAtTime(volume, absTime);
+		this.time = Math.max(time, this.time);
+		return this;
+	}
+
+	expRampToVolumeAtTime(volume: number, time: number) {
+		const absTime = this.audioContext.currentTime + time;
+		this.gain.gain.exponentialRampToValueAtTime(volume, absTime);
+		this.time = Math.max(time, this.time);
+		return this;
+	}
+
+	setVolumeAtTime(volume: number, time: number) {
+		const absTime = this.audioContext.currentTime + time;
+		this.gain.gain.setValueAtTime(volume, absTime);
+		this.time = Math.max(time, this.time);
 		return this;
 	}
 
@@ -67,5 +91,20 @@ export class WhiteNoise {
 		}
 		WhiteNoise.bufferSize = bufferSize;
 		WhiteNoise.noiseBuffer = noiseBuffer;
+	}
+
+	wait(): Promise<void> {
+		return new Promise((resolve) => setTimeout(resolve, this.time * 1000));
+	}
+
+	dispose() {
+		this.gain.disconnect();
+		this.bufferSource.stop();
+		this.filter?.disconnect();
+	}
+
+	async waitDispose() {
+		await this.wait();
+		this.dispose();
 	}
 }

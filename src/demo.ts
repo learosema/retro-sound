@@ -1,4 +1,4 @@
-import { Sound } from './retro-sound';
+import { Sound, WhiteNoise } from './retro-sound';
 
 function $<T = HTMLElement>(sel: string, con?: HTMLElement|Document) {
 	return (con ?? document).querySelector(sel) as T;
@@ -10,7 +10,13 @@ const masterVolume = AC.createGain();
 masterVolume.gain.setValueAtTime(0.25, 0);
 masterVolume.connect(AC.destination);
 
-$('#bling').addEventListener('click', async () => {
+$('#noise').addEventListener('click', () => {
+	AC.resume();
+	const noise = new WhiteNoise(AC).withFilter('lowpass', 5000).toDestination(masterVolume);
+	noise.play().rampToVolumeAtTime(0, .5).rampFilterFreqAtTime(100, .5).waitDispose();
+});
+
+$('#bling').addEventListener('click', () => {
   AC.resume();
   const FM = new Sound(AC, 'triangle')
     .withModulator('square', 6, 600, 'detune')
@@ -18,8 +24,9 @@ $('#bling').addEventListener('click', async () => {
     .withFilter('lowpass', 1000)
     .toDestination(masterVolume);
 
-  await FM.play('A5').rampToVolumeAtTime(0, 1).wait();
-	FM.dispose();
+  FM.play('A5')
+		.rampToVolumeAtTime(0, 1)
+		.waitDispose();
 });
 
 
@@ -33,7 +40,7 @@ $('#ring').addEventListener('click', () => {
   FM.play('C5')
     .setVolumeAtTime(1, 1)
     .rampToVolumeAtTime(0, 1.25)
-    .wait().then(() => FM.dispose())
+    .waitDispose()
 });
 
 $('#laser').addEventListener('click', () => {
@@ -46,7 +53,7 @@ $('#laser').addEventListener('click', () => {
   FM.play('C6')
     .rampToNoteAtTime('C5', .25)
     .rampToVolumeAtTime(0, .5)
-    .wait().then(() => FM.dispose());
+    .waitDispose();
 });
 
 $('#witch').addEventListener('click', () => {
@@ -62,7 +69,7 @@ $('#witch').addEventListener('click', () => {
     .rampToVolumeAtTime(1, 0.125)
     .rampToNoteAtTime('G3', 3)
     .rampToVolumeAtTime(0, 3.5)
-    .wait().then(() => FM.dispose());
+    .waitDispose();
 });
 
 $('#emergency').addEventListener('click', () => {
@@ -73,7 +80,7 @@ $('#emergency').addEventListener('click', () => {
     .toDestination(masterVolume);
   FM.play('A4')
     .rampToVolumeAtTime(0,2)
-    .wait().then(() => FM.dispose())
+    .waitDispose()
 });
 
 $('#gameover').addEventListener('click', () => {
@@ -85,7 +92,7 @@ $('#gameover').addEventListener('click', () => {
   FM.play('A3')
     .rampToNoteAtTime('E2', 3)
     .rampToVolumeAtTime(0,4)
-    .wait().then(() => FM.dispose());
+    .waitDispose();
 });
 
 
@@ -100,7 +107,7 @@ $('#won').addEventListener('click', () => {
     .setToNoteAtTime('C4', 0.75)
     .setVolumeAtTime(1, 1)
     .rampToVolumeAtTime(0, 2)
-    .wait().then(() => FM.dispose())
+    .waitDispose()
 });
 
 $('#smoke').addEventListener('click', () => {
@@ -131,5 +138,5 @@ $('#smoke').addEventListener('click', () => {
     .setToNoteAtTime('F3', 3)
     .setVolumeAtTime(1, 3.5)
     .rampToVolumeAtTime(0, 3.75)
-    .wait().then(() => FM.dispose())
+    .waitDispose()
 });

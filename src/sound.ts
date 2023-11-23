@@ -89,7 +89,7 @@ export class Sound {
 		return this;
 	}
 
-	expRampToVolumeAtTime2(volume: number, time: number) {
+	expRampToVolumeAtTime(volume: number, time: number) {
 		const absTime = this.audioContext.currentTime + time;
 		this.carrier.gain.gain.exponentialRampToValueAtTime(volume, absTime);
 		this.time = Math.max(time, this.time);
@@ -149,5 +149,10 @@ export class Sound {
 			modulator.gain.disconnect();
 		}
 		this.modulators = []
+	}
+
+	async waitDispose() {
+		await this.wait();
+		this.dispose();
 	}
 }

@@ -7,9 +7,10 @@
     <style>
       {% include "demo.css" %}</style>
   </head>
-  <body>
+  <body class="flow">
     <h1>Lea's Web Audio Sound Machine</h1>
-    <div class="button-group">
+    <fieldset class="button-group">
+			<legend>Various sound effects</legend>
       <button id="bling">
         Bling
       </button>
@@ -34,7 +35,14 @@
       <button id="smoke">
         Smoke
       </button>
-    </div>
+
+    </fieldset>
+		<fieldset class="button-group">
+			<legend>Percussion</legend>
+			<button id="noise">
+				Noise
+			</button>
+		</fieldset>
     <script type="module" src="demo.js"></script>
   </body>
 </html>
