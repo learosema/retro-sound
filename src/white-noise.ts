@@ -37,9 +37,15 @@ export class WhiteNoise {
 
 	withFilter(type: BiquadFilterType, frequency: number, Q?: number) {
 		this.filter = createFilter(this.audioContext, type, frequency, Q);
-		this.bufferSource.disconnect();
-		this.bufferSource.connect(this.filter);
-		this.filter.connect(this.output);
+		this.gain.connect(this.filter);
+		this.output = this.filter;
+		return this;
+	}
+
+	setFilterFreqAtTime(frequency: number, time = 0) {
+		this.time = Math.max(time, this.time);
+		const absTime = this.audioContext.currentTime + time;
+		this.filter?.frequency.setValueAtTime(frequency, time);
 		return this;
 	}
 

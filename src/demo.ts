@@ -12,8 +12,22 @@ masterVolume.connect(AC.destination);
 
 $('#noise').addEventListener('click', () => {
 	AC.resume();
+	const noise = new WhiteNoise(AC).withFilter('lowpass', 10000).toDestination(masterVolume);
+	noise.play().rampToVolumeAtTime(0, .5).waitDispose();
+});
+
+
+$('#noise2').addEventListener('click', () => {
+	AC.resume();
 	const noise = new WhiteNoise(AC).withFilter('lowpass', 5000).toDestination(masterVolume);
-	noise.play().rampToVolumeAtTime(0, .5).rampFilterFreqAtTime(100, .5).waitDispose();
+	noise.play().rampToVolumeAtTime(0, .5).waitDispose();
+});
+
+
+$('#noise3').addEventListener('click', () => {
+	AC.resume();
+	const noise = new WhiteNoise(AC).withFilter('lowpass', 1000).toDestination(masterVolume);
+	noise.play().rampToVolumeAtTime(0, .5).waitDispose();
 });
 
 $('#bling').addEventListener('click', () => {
