@@ -23,7 +23,8 @@
     "dist/retro-sound.js",
     "dist/retro-sound.d.ts",
     "dist/sound.d.ts",
-    "dist/white-noise.d.ts"
+    "dist/white-noise.d.ts",
+		"dist/utils"
   ],
   "keywords": [
     "sound",
