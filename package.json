@@ -1,16 +1,36 @@
 {
   "name": "retro-sound",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "An 8-bit style Sound Library based on Web Audio API",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "dist/retro-sound.js",
+  "module": "dist/retro-sound.js",
+  "types": "dist/retro-sound.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/retro-sound.js"
+    }
+  },
   "scripts": {
     "dev": "eleventy --serve",
     "build": "tsc && cross-env NODE_ENV=production eleventy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "files": [
+    "dist/retro-sound.js",
+    "dist/retro-sound.d.ts",
+    "dist/sound.d.ts",
+    "dist/white-noise.d.ts"
+  ],
+  "keywords": [
+    "sound",
+    "webaudio-api"
+  ],
+  "author": "Lea Rosema",
+  "license": "MIT",
   "devDependencies": {
     "@11ty/eleventy": "^2.0.1",
     "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
@@ -18,7 +38,6 @@
     "@semantic-release/npm": "^11.0.1",
     "browserslist": "^4.22.1",
     "cross-env": "^7.0.3",
-    "dayjs": "^1.11.10",
     "esbuild": "^0.19.7",
     "gh-pages": "^6.1.0",
     "html-minifier-terser": "^7.2.0",
