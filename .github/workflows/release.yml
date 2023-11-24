@@ -34,6 +34,7 @@ jobs:
       - name: Run production a build
         run: |
           URL="https://retro-sound.js.org" npm run build
+          cp CNAME dist
           touch dist/.nojekyll
       - name: Deploy to GitHub pages
         run: |
