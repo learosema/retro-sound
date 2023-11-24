@@ -1,3 +1,3 @@
 module.exports = {
-	url: ''
+	url: process.env.URL || ''
 };
