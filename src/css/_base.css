@@ -1,0 +1,39 @@
+html {
+  font-family: system-ui, sans-serif;
+  font-size: 1.25em;
+  line-height: 1.5;
+}
+
+body{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg, #222);
+  color: var(--fg, #fff);
+}
+
+main {
+  flex: 1 auto;
+}
+
+.wrapper {
+  width: min(100% - 3rem, var(--container-max, 800px));
+  margin-inline: auto;
+}
+
+.flow > * + * {
+  margin-block-start: var(--flow-space, 1.5em);
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  padding: .5em 1em;
+  cursor: pointer;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}

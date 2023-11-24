@@ -1,0 +1,10 @@
+@layer reset {
+  *, *::before, *::after {
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  *:focus {
+    outline: 3px solid var(--fg, #fff);
+  }
+}
