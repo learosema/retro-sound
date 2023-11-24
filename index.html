@@ -15,7 +15,8 @@
 		<main>
 			<article class="wrapper flow">
 				<h1>Introducing retro-sound.js</h1>
-				<p><code>retro-sound.js</code> is Lea's new Web Audio Library for 8-bit style retro sounds.</p>
+				<p><code>retro-sound.js</code> is Lea's new Web Audio Library for 8-bit style retro sounds, based on Web Audio API. It's an <code>npm install</code> away:</p>
+<pre class="language-sh"><code class="language-sh"><span class="token function">npm</span> <span class="token function">install</span> retro-sound</code></pre>
 <p>Let's have a look how it works. As it is based on Web Audio API, first thing to do is to create a new <code>AudioContext</code>.
 I also create a gain node to reduce the overall loudness a bit.</p>
 <pre class="language-ts"><code class="language-ts"><span class="token keyword">const</span> <span class="token constant">AC</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AudioContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
