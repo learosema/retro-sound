@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
-    <link rel="shortcut icon" href="/favicon.png">
-		<link rel="stylesheet" href="/css/demo.css">
+    <link rel="shortcut icon" href="{{ meta.url }}/favicon.png">
+		<link rel="stylesheet" href="{{ meta.url }}/css/demo.css">
   </head>
   <body>
 		<header class="header">
-			<a href="/"><img src="favicon.png" alt="Logo"></a>
+			<a href="/"><img src="{{ meta.url }}/favicon.png" alt="Logo"></a>
 			<h2>retro-sound.js</h2>
 		</header>
 		<main>
@@ -21,6 +21,6 @@
 		<footer class="footer">
 			<p>Made with love <span aria-hidden="true">💖</span> by Lea Rosema</p>
 		</footer>
-    <script type="module" src="demo.js"></script>
+    <script type="module" src="{{ meta.url }}/demo.js"></script>
   </body>
 </html>
