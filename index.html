@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introducing retro-sound.js</title>
+    <link rel="shortcut icon" href="/favicon.png">
+		<link rel="stylesheet" href="/css/demo.css">
+  </head>
+  <body>
+		<header class="header">
+			<a href="/"><img src="/favicon.png" alt="Logo"></a>
+			<h2>retro-sound.js</h2>
+		</header>
+		<main>
+			<article class="wrapper flow">
+				<h1>Introducing retro-sound.js</h1>
+				<p><code>retro-sound.js</code> is Lea's new Web Audio Library for 8-bit style retro sounds.</p>
+<p>Let's have a look how it works. As it is based on Web Audio API, first thing to do is to create a new <code>AudioContext</code>.
+I also create a gain node to reduce the overall loudness a bit.</p>
+<pre class="language-ts"><code class="language-ts"><span class="token keyword">const</span> <span class="token constant">AC</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AudioContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> masterVolume <span class="token operator">=</span> <span class="token constant">AC</span><span class="token punctuation">.</span><span class="token function">createGain</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+masterVolume<span class="token punctuation">.</span>gain<span class="token punctuation">.</span><span class="token function">setValueAtTime</span><span class="token punctuation">(</span><span class="token number">0.25</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+masterVolume<span class="token punctuation">.</span><span class="token function">connect</span><span class="token punctuation">(</span><span class="token constant">AC</span><span class="token punctuation">.</span>destination<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>My library exports a <code>Sound</code> class which uses the Builder pattern to create sounds based on the four basic oscillators available in Web Audio API (triangle, singe, square and sawtooth). There are builder methods to add a couple of effects to the sound, like a modulator or a lowpass filter.</p>
+<fieldset class="button-group">
+	<legend>Various sound effects</legend>
+	<button id="bling">
+		Bling
+	</button>
+	<button id="ring">
+		Ring
+	</button>
+	<button id="laser">
+		Laser
+	</button>
+	<button id="witch">
+		Witch
+	</button>
+	<button id="emergency">
+		Emergency
+	</button>
+	<button id="gameover">
+		Game Over
+	</button>
+	<button id="won">
+		I won
+	</button>
+	<button id="smoke">
+		Smoke
+	</button>
+</fieldset>
+<pre class="language-ts"><code class="language-ts"><span class="token constant">AC</span><span class="token punctuation">.</span><span class="token function">resume</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token constant">FM</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Sound</span><span class="token punctuation">(</span><span class="token constant">AC</span><span class="token punctuation">,</span> <span class="token string">'triangle'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">withModulator</span><span class="token punctuation">(</span><span class="token string">'square'</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">600</span><span class="token punctuation">,</span> <span class="token string">'detune'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">withModulator</span><span class="token punctuation">(</span><span class="token string">'square'</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">300</span><span class="token punctuation">,</span> <span class="token string">'detune'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">withFilter</span><span class="token punctuation">(</span><span class="token string">'lowpass'</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">toDestination</span><span class="token punctuation">(</span>masterVolume<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token constant">FM</span><span class="token punctuation">.</span><span class="token function">play</span><span class="token punctuation">(</span><span class="token string">'A5'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">rampToVolumeAtTime</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">waitDispose</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>There is also a <code>WhiteNoise</code> class. Combining it with a low-pass filter and changing it over time can create interesting effects like swooshes or percussions.</p>
+<fieldset class="button-group">
+	<legend>Percussion</legend>
+	<button id="noise">
+		Noise 1
+	</button>
+	<button id="noise2">
+		Noise 2
+	</button>
+	<button id="noise3">
+		Noise 3
+	</button>
+	<button id="noise4">
+		Noise 4
+	</button>
+</fieldset>
+<pre class="language-ts"><code class="language-ts"><span class="token constant">AC</span><span class="token punctuation">.</span><span class="token function">resume</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> noise <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WhiteNoise</span><span class="token punctuation">(</span><span class="token constant">AC</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">withFilter</span><span class="token punctuation">(</span><span class="token string">'lowpass'</span><span class="token punctuation">,</span> <span class="token number">10000</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">toDestination</span><span class="token punctuation">(</span>masterVolume<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+noise<span class="token punctuation">.</span><span class="token function">play</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">rampFilterFreqAtTime</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">,</span> <span class="token number">.25</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">rampToVolumeAtTime</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">.5</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">waitDispose</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+
+			</article>
+		</main>
+		<footer class="footer">
+			<p>Made with love <span aria-hidden="true">💖</span> by Lea Rosema</p>
+		</footer>
+    <script type="module" src="/demo.js"></script>
+  </body>
+</html>
