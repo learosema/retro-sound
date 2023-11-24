@@ -33,7 +33,7 @@ jobs:
         run: npm ci
       - name: Run production a build
         run: |
-          URL="https://learosema.github.io/retro-sound" npm run build
+          URL="https://retro-sound.js.org" npm run build
           touch dist/.nojekyll
       - name: Deploy to GitHub pages
         run: |
