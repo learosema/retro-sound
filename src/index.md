@@ -1,6 +1,6 @@
 ---
 title: Introducing retro-sound.js
-layout: base
+layout: demo
 ---
 
 `retro-sound.js` is Lea's new Web Audio Library for 8-bit style retro sounds, based on Web Audio API. It's an `npm install` away:

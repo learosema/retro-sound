@@ -16,6 +16,15 @@ main {
   flex: 1 auto;
 }
 
+a {
+  color: #faf;
+
+  &:hover {
+    color: #ff7;
+    text-decoration-style: double;
+  }
+}
+
 .wrapper {
   width: min(100% - 3rem, var(--container-max, 800px));
   margin-inline: auto;
@@ -23,6 +32,14 @@ main {
 
 .flow > * + * {
   margin-block-start: var(--flow-space, 1.5em);
+}
+
+nav > ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
 }
 
 button {

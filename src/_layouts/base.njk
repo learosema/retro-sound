@@ -18,9 +18,16 @@
 				{{ content | safe }}
 			</article>
 		</main>
-		<footer class="footer">
-			<p>Made with love <span aria-hidden="true">💖</span> by Lea Rosema</p>
+		<footer class="footer flow">
+			<p>Made with love <span aria-hidden="true">💖</span> by <a rel="me" href="https://lea.lgbt/@lea">Lea Rosema</a></p>
+			<nav>
+				<ul>
+					<li><a href="https://github.com/learosema/retro-sound">github</a></li>
+					<li><a href="{{ meta.url }}/imprint">imprint</a></li>
+				</ul>
+			</nav>
 		</footer>
-    <script type="module" src="{{ meta.url }}/demo.js"></script>
+		{% block scripts %}
+		{% endblock %}
   </body>
 </html>
