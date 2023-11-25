@@ -24,8 +24,13 @@ export class WhiteNoise {
 		this.output = this.gain;
 	}
 
-	play() {
-		this.bufferSource.start();
+	play(time?: number) {
+		this.bufferSource.start(typeof time !== 'undefined' ? (this.audioContext.currentTime + time) : undefined);
+		return this;
+	}
+
+	stop(time?: number) {
+		this.bufferSource.stop(typeof time !== 'undefined' ? (this.audioContext.currentTime + time) : undefined);
 		return this;
 	}
 
