@@ -1,3 +1,4 @@
 module.exports = {
-	url: process.env.URL || ''
+	url: process.env.URL || '',
+	siteName: 'retro-sound.js'
 };

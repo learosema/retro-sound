@@ -24,7 +24,7 @@
     "dist/retro-sound.d.ts",
     "dist/sound.d.ts",
     "dist/white-noise.d.ts",
-		"dist/utils"
+    "dist/utils"
   ],
   "keywords": [
     "sound",
@@ -44,6 +44,7 @@
     "html-minifier-terser": "^7.2.0",
     "lightningcss": "^1.22.1",
     "semantic-release": "^22.0.8",
+    "typedoc": "^0.25.3",
     "typescript": "^5.2.2"
   }
 }
