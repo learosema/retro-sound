@@ -9,7 +9,8 @@ export declare class WhiteNoise {
     static bufferSize: number;
     static noiseBuffer: AudioBuffer | null;
     constructor(audioContext: AudioContext);
-    play(): this;
+    play(time?: number): this;
+    stop(time?: number): this;
     toDestination(destination?: AudioNode | null): this;
     withFilter(type: BiquadFilterType, frequency: number, Q?: number): this;
     setFilterFreqAtTime(frequency: number, time?: number): this;
