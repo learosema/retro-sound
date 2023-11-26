@@ -10,8 +10,6 @@ export class Sound {
 	filter: BiquadFilterNode | null = null;
 	time: number = 0;
 
-	modulator: OscGainNode | null = null;
-
 	modulators: Array<OscGainNode> = [];
 
 	constructor(
