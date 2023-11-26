@@ -6,7 +6,6 @@ export declare class Sound {
     destination: AudioNode | null;
     filter: BiquadFilterNode | null;
     time: number;
-    modulator: OscGainNode | null;
     modulators: Array<OscGainNode>;
     constructor(audioContext: AudioContext, carrierType?: OscillatorType);
     withFilter(type: BiquadFilterType, frequency: number, Q?: number): this;
