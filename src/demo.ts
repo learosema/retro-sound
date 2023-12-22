@@ -177,7 +177,7 @@ const violin = new Instrument(AC)
 	.toDestination(masterVolume);
 
 	/*@ts-ignore */
-window.violin = violin;
+window.violin = violin;window.ac = violin.audioContext;
 
 
 $('#melody')?.addEventListener('click', () => {

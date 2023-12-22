@@ -32,7 +32,7 @@ export class Instrument implements Playable {
 		this.sounds.push(...sounds);
 		for (const sound of sounds) {
 			sound.toDestination(this.volume);
-			sound.setVolumeAtTime(1, this.audioContext.currentTime);
+			sound.setVolumeAtTime(1, 0);
 		}
 		return this;
 	}
@@ -49,19 +49,21 @@ export class Instrument implements Playable {
 	}
 
 	play(note: string, time: number): Playable {
-		const absTime = this.audioContext.currentTime + time;
-		this.volume.gain.linearRampToValueAtTime(this.attackLevel, absTime + this.attackTime);
-		this.volume.gain.linearRampToValueAtTime(this.sustainLevel, absTime + this.attackTime + this.decayTime);
-		for (const sound of this.sounds) {
-			sound.setToNoteAtTime(note, time);
-		}
+		this.audioContext.resume();
+			const absTime = this.audioContext.currentTime + time;
+			this.volume.gain.linearRampToValueAtTime(this.attackLevel, absTime + this.attackTime);
+			this.volume.gain.linearRampToValueAtTime(this.sustainLevel, absTime + this.attackTime + this.decayTime);
+			for (const sound of this.sounds) {
+				sound.setToNoteAtTime(note, time);
+			}
+
 		return this;
 	}
 
 	release(time: number): Playable {
 		const absReleaseTime = this.audioContext.currentTime + time + this.releaseTime;
 		this.volume.gain.linearRampToValueAtTime(0, absReleaseTime);
-		this.volume.gain.setValueAtTime(0, absReleaseTime);
+		this.volume.gain.setValueAtTime(0, absReleaseTime + 0.00001);
 		return this;
 	}
 
