@@ -1,3 +1,4 @@
+import { Instrument } from './instrument';
 import { Sound, WhiteNoise } from './retro-sound';
 
 function $<T = HTMLElement>(sel: string, con?: HTMLElement|Document) {
@@ -7,7 +8,7 @@ function $<T = HTMLElement>(sel: string, con?: HTMLElement|Document) {
 const AC = new AudioContext();
 const masterVolume = AC.createGain();
 
-masterVolume.gain.setValueAtTime(0.25, 0);
+masterVolume.gain.setValueAtTime(0.25, AC.currentTime);
 masterVolume.connect(AC.destination);
 
 $('#noise').addEventListener('click', () => {
@@ -168,3 +169,32 @@ $('#smoke').addEventListener('click', () => {
     .rampToVolumeAtTime(0, 3.75)
     .waitDispose()
 });
+
+
+const violin = new Instrument(AC)
+	.withSound(new Sound(AC, 'triangle').withModulator('sine', 6, 10, 'detune').withFilter('lowpass', 10000))
+	.withAttack(0.5).withDecay(0.1).withSustain(0.9).withRelease(0.5)
+	.toDestination(masterVolume);
+
+	/*@ts-ignore */
+window.violin = violin;
+
+
+$('#melody')?.addEventListener('click', () => {
+	window.setTimeout(() => {
+		AC.resume();
+	violin
+		.play('C4', 0)
+		.play('D4', 0.5)
+		.play('E4', 1)
+		.play('F4', 1.5)
+		.play('G4', 2)
+		.play('A4', 2.5)
+		.play('B4', 3)
+		.play('C5', 3.5)
+		.release(4)
+
+	}, 0)
+
+
+})

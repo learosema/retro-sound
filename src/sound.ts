@@ -66,14 +66,19 @@ export class Sound {
 	}
 
 	toDestination(destination: AudioNode | null = null) {
+		if (this.destination) {
+			this.output.disconnect(this.destination);
+		}
 		this.destination = destination || this.audioContext.destination;
 		this.output.connect(this.destination);
 		return this;
 	}
 
-	play(note: string, startVolume = 1, startTime = 0) {
+	play(note: string, startVolume?: number, startTime?: number): Sound;
+	play(frequency: number, startVolume?: number, startTime?: number): Sound;
+	play(noteOrFrequency: string|number, startVolume = 1, startTime = 0): Sound {
 		const absStartTime = this.audioContext.currentTime + startTime;
-		const frequency = noteToFrequency(note);
+		const frequency = typeof noteOrFrequency === 'string' ? noteToFrequency(noteOrFrequency) : noteOrFrequency;
 		this.carrier.osc.frequency.setValueAtTime(frequency, absStartTime);
 		this.carrier.gain.gain.setValueAtTime(startVolume, absStartTime);
 		this.time = Math.max(startTime, this.time);
