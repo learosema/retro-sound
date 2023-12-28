@@ -1,27 +1,35 @@
+import { Playable } from "./playable";
 import { createFilter } from "./utils/filter";
 import { noteToFrequency } from "./utils/note-utils";
 import { OscGainNode, createOscGainNode } from "./utils/osc-gain";
 
-export class Sound {
+export class Sound implements Playable {
 
 	carrier: OscGainNode;
+	volume: GainNode;
 	output: AudioNode;
 	destination: AudioNode | null = null;
 	filter: BiquadFilterNode | null = null;
 	time: number = 0;
 
 	modulators: Array<OscGainNode> = [];
+	attackTime: number = 0;
+	attackLevel: number = 1;
+	decayTime: number = 0;
+	sustainLevel: number = 1;
+	releaseTime: number = 0;
 
 	constructor(
 		public audioContext: AudioContext,
 		carrierType: OscillatorType = 'square') {
 		this.audioContext = audioContext;
 		this.carrier = createOscGainNode(this.audioContext, carrierType);
-		this.output = this.carrier.gain;
+		this.volume = this.carrier.gain;
+		this.output = this.volume;
+		this.setVolumeAtTime(0, 0);
 	}
 
 	withFilter(type: BiquadFilterType, frequency: number, Q?: number) {
-		// TODO: maybe put the filter directly after the oscillator :)
 		this.filter = createFilter(this.audioContext, type, frequency, Q);
 		this.carrier.gain.connect(this.filter);
 		this.output = this.filter;
@@ -42,9 +50,6 @@ export class Sound {
 			switch (assignTo) {
 				case 'frequency':
 					target = this.carrier.osc.frequency;
-					break;
-				case 'gain':
-					target = this.carrier.gain.gain;
 					break;
 				case 'filter':
 					target = this.filter?.frequency;
@@ -74,14 +79,23 @@ export class Sound {
 		return this;
 	}
 
-	play(note: string, startVolume?: number, startTime?: number): Sound;
-	play(frequency: number, startVolume?: number, startTime?: number): Sound;
-	play(noteOrFrequency: string|number, startVolume = 1, startTime = 0): Sound {
-		const absStartTime = this.audioContext.currentTime + startTime;
+	play(note: string, time?: number): Sound;
+	play(frequency: number, time?: number): Sound;
+	play(noteOrFrequency: string|number, time = 0): Sound {
 		const frequency = typeof noteOrFrequency === 'string' ? noteToFrequency(noteOrFrequency) : noteOrFrequency;
-		this.carrier.osc.frequency.setValueAtTime(frequency, absStartTime);
-		this.carrier.gain.gain.setValueAtTime(startVolume, absStartTime);
-		this.time = Math.max(startTime, this.time);
+		const absTime = this.audioContext.currentTime + time;
+		this.carrier.osc.frequency.setValueAtTime(frequency, absTime);
+		this.volume.gain.linearRampToValueAtTime(this.attackLevel, absTime + this.attackTime);
+		this.volume.gain.linearRampToValueAtTime(this.sustainLevel, absTime + this.attackTime + this.decayTime);
+		this.time = Math.max(absTime, this.time);
+		return this;
+	}
+
+	release(time: number): Playable {
+		const absReleaseTime = this.audioContext.currentTime + time + this.releaseTime;
+		this.volume.gain.linearRampToValueAtTime(0, absReleaseTime);
+		this.volume.gain.setValueAtTime(0, absReleaseTime);
+		this.time = Math.max(absReleaseTime, this.time);
 		return this;
 	}
 
@@ -136,11 +150,33 @@ export class Sound {
 		return this;
 	}
 
+	withAttack(attackTime: number, attackLevel = 1) {
+		this.attackTime = attackTime;
+		this.attackLevel = attackLevel;
+		return this;
+	}
+
+	withDecay(decayTime: number) {
+		this.decayTime = decayTime;
+		return this;
+	}
+
+	withSustain(sustainLevel: number) {
+		this.sustainLevel = sustainLevel;
+		return this;
+	}
+
+	withRelease(releaseTime: number) {
+		this.releaseTime = releaseTime;
+		return this;
+	}
+
 	wait(): Promise<void> {
 		return new Promise((resolve) => setTimeout(resolve, this.time * 1000));
 	}
 
-	dispose() {
+	async dispose(): Promise<void> {
+		await this.wait();
 		this.carrier.osc.stop();
 		this.carrier.osc.disconnect();
 		this.carrier.gain.disconnect();
@@ -154,8 +190,4 @@ export class Sound {
 		this.modulators = []
 	}
 
-	async waitDispose() {
-		await this.wait();
-		this.dispose();
-	}
 }

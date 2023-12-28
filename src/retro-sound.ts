@@ -1,4 +1,3 @@
-import { Instrument } from "./instrument";
 import { Sound } from "./sound";
 import { createFilter } from "./utils/filter";
 import { noteToFrequency, noteToMIDI } from "./utils/note-utils";
@@ -8,4 +7,3 @@ export { noteToFrequency, noteToMIDI };
 export { createFilter };
 export { WhiteNoise };
 export { Sound };
-export { Instrument };

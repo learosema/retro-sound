@@ -108,14 +108,10 @@ export class WhiteNoise {
 		return new Promise((resolve) => setTimeout(resolve, this.time * 1000));
 	}
 
-	dispose() {
+	async dispose() {
+		await this.wait();
 		this.gain.disconnect();
 		this.bufferSource.stop();
 		this.filter?.disconnect();
-	}
-
-	async waitDispose() {
-		await this.wait();
-		this.dispose();
 	}
 }

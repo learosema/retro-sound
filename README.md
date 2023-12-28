@@ -28,11 +28,13 @@ const FM = new Sound(AC, 'triangle')
   .withModulator('square', 6, 600, 'detune')
   .withModulator('square', 12, 300, 'detune')
   .withFilter('lowpass', 1000)
+  .withAttack(0, 1)
+  .withRelease(1)
   .toDestination(masterVolume);
 
 FM.play('A5')
-  .rampToVolumeAtTime(0, 1)
-  .waitDispose();
+  .release(1)
+  .dispose();
 ```
 
 There is also a `WhiteNoise` class. Combining it with a low-pass filter and changing it over time can create interesting effects like swooshes or percussions.
@@ -46,5 +48,5 @@ const noise = new WhiteNoise(AC)
 
 noise.play()
   .rampFilterFreqAtTime(1000, .25)
-  .rampToVolumeAtTime(0, .5).waitDispose();
+  .rampToVolumeAtTime(0, .5).dispose();
 ```

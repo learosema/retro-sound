@@ -1,4 +1,3 @@
-import { Instrument } from './instrument';
 import { Sound, WhiteNoise } from './retro-sound';
 
 function $<T = HTMLElement>(sel: string, con?: HTMLElement|Document) {
@@ -16,7 +15,7 @@ $('#noise').addEventListener('click', () => {
 	const noise = new WhiteNoise(AC).withFilter('lowpass', 10000).toDestination(masterVolume);
 	noise.play()
 		.rampFilterFreqAtTime(1000, .25)
-		.rampToVolumeAtTime(0, .5).waitDispose();
+		.rampToVolumeAtTime(0, .5).dispose();
 });
 
 
@@ -25,7 +24,7 @@ $('#noise2').addEventListener('click', () => {
 	const noise = new WhiteNoise(AC).withFilter('lowpass', 50).toDestination(masterVolume);
 	noise.play()
 		.expRampFilterFreqAtTime(10000, .25)
-		.rampToVolumeAtTime(0, .5).waitDispose();
+		.rampToVolumeAtTime(0, .5).dispose();
 });
 
 
@@ -34,7 +33,7 @@ $('#noise3').addEventListener('click', () => {
 	const noise = new WhiteNoise(AC).withFilter('lowpass', 10000).toDestination(masterVolume);
 	noise.play()
 		.expRampFilterFreqAtTime(10, .25)
-		.rampToVolumeAtTime(0, .5).waitDispose();
+		.rampToVolumeAtTime(0, .5).dispose();
 });
 
 $('#noise4').addEventListener('click', () => {
@@ -42,7 +41,7 @@ $('#noise4').addEventListener('click', () => {
 	const noise = new WhiteNoise(AC).withFilter('lowpass', 1000).toDestination(masterVolume);
 	noise.play()
 		.expRampFilterFreqAtTime(10, .25)
-		.rampToVolumeAtTime(0, .5).waitDispose();
+		.rampToVolumeAtTime(0, .5).dispose();
 });
 
 $('#bling').addEventListener('click', () => {
@@ -51,11 +50,12 @@ $('#bling').addEventListener('click', () => {
     .withModulator('square', 6, 600, 'detune')
 		.withModulator('square', 12, 300, 'detune')
     .withFilter('lowpass', 1000)
+		.withRelease(1)
     .toDestination(masterVolume);
 
   FM.play('A5')
-		.rampToVolumeAtTime(0, 1)
-		.waitDispose();
+		.release(1)
+		.dispose();
 });
 
 
@@ -69,7 +69,7 @@ $('#ring').addEventListener('click', () => {
   FM.play('C5')
     .setVolumeAtTime(1, 1)
     .rampToVolumeAtTime(0, 1.25)
-    .waitDispose()
+    .dispose()
 });
 
 $('#laser').addEventListener('click', () => {
@@ -82,23 +82,24 @@ $('#laser').addEventListener('click', () => {
   FM.play('C6')
     .rampToNoteAtTime('C5', .25)
     .rampToVolumeAtTime(0, .5)
-    .waitDispose();
+    .dispose();
 });
 
 $('#witch').addEventListener('click', () => {
   AC.resume();
   const FM = new Sound(AC, 'sawtooth')
+		.withAttack(1,1)
     .withModulator('sine', 18, 150, 'detune')
     .withModulator('sine', 12, 50, 'last')
     .withFilter('lowpass', 1000)
     .withModulator('triangle', 4, 1000, 'filter')
     .toDestination(masterVolume);
 
-  FM.play('A4', 0.0)
+  FM.play('A4')
     .rampToVolumeAtTime(1, 0.125)
     .rampToNoteAtTime('G3', 3)
     .rampToVolumeAtTime(0, 3.5)
-    .waitDispose();
+    .dispose();
 });
 
 $('#emergency').addEventListener('click', () => {
@@ -109,7 +110,7 @@ $('#emergency').addEventListener('click', () => {
     .toDestination(masterVolume);
   FM.play('A4')
     .rampToVolumeAtTime(0,2)
-    .waitDispose()
+    .dispose();
 });
 
 $('#gameover').addEventListener('click', () => {
@@ -121,7 +122,7 @@ $('#gameover').addEventListener('click', () => {
   FM.play('A3')
     .rampToNoteAtTime('E2', 3)
     .rampToVolumeAtTime(0,4)
-    .waitDispose();
+    .dispose();
 });
 
 
@@ -136,14 +137,15 @@ $('#won').addEventListener('click', () => {
     .setToNoteAtTime('C4', 0.75)
     .setVolumeAtTime(1, 1)
     .rampToVolumeAtTime(0, 2)
-    .waitDispose()
+    .dispose()
 });
 
 $('#smoke').addEventListener('click', () => {
   AC.resume();
   const FM = new Sound(AC, 'sawtooth')
-    .withFilter('lowpass', 600)
-    .withModulator('sine', 32, 400, 'filter')
+    .withFilter('lowpass', 800)
+    .withModulator('sine', 32, 600, 'filter')
+		.withModulator('sine', 8, 25, 'detune')
     .toDestination(masterVolume);
   FM.play('C3')
     .setVolumeAtTime(0, 0.25)
@@ -167,22 +169,21 @@ $('#smoke').addEventListener('click', () => {
     .setToNoteAtTime('F3', 3)
     .setVolumeAtTime(1, 3.5)
     .rampToVolumeAtTime(0, 3.75)
-    .waitDispose()
+    .dispose()
 });
 
 
-const violin = new Instrument(AC)
-	.withSound(new Sound(AC, 'triangle').withModulator('sine', 6, 10, 'detune').withFilter('lowpass', 10000))
-	.withAttack(0.5).withDecay(0.1).withSustain(0.9).withRelease(0.5)
-	.toDestination(masterVolume);
-
-	/*@ts-ignore */
-window.violin = violin;window.ac = violin.audioContext;
-
 
 $('#melody')?.addEventListener('click', () => {
-	window.setTimeout(() => {
-		AC.resume();
+	const violin = new Sound(AC, 'triangle')
+		.withFilter('lowpass', 1000)
+		.withModulator('sine', 8, 25, 'detune')
+		.withAttack(0.5)
+		.withDecay(0.1)
+		.withSustain(0.9)
+		.withRelease(0.5)
+		.toDestination(masterVolume);
+
 	violin
 		.play('C4', 0)
 		.play('D4', 0.5)
@@ -192,9 +193,5 @@ $('#melody')?.addEventListener('click', () => {
 		.play('A4', 2.5)
 		.play('B4', 3)
 		.play('C5', 3.5)
-		.release(4)
-
-	}, 0)
-
-
+		.release(4).dispose();
 })
